@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="pt-br">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Surpresa 💖</title>
+  <style>
+    :root { --bg1:#ff7aa2; --bg2:#ffd1dc; --ink:#2b2b2b; }
+    *{box-sizing:border-box;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;}
+    body{
+      margin:0; min-height:100vh; display:grid; place-items:center;
+      background: radial-gradient(circle at 20% 10%, #fff, transparent 35%),
+                  linear-gradient(135deg,var(--bg1),var(--bg2));
+      color:var(--ink);
+      overflow:hidden;
+    }
+    .card{
+      width:min(92vw,420px);
+      background: rgba(255,255,255,.75);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255,255,255,.7);
+      border-radius: 22px;
+      padding: 22px;
+      box-shadow: 0 18px 50px rgba(0,0,0,.18);
+      text-align:center;
+    }
+    h1{margin:6px 0 8px;font-size:1.45rem;}
+    p{margin:10px 0; line-height:1.35;}
+    .btn{
+      margin-top:14px;
+      border:0; border-radius:999px;
+      padding:12px 16px;
+      background:#ff3b7a;
+      color:white;
+      font-weight:700;
+      cursor:pointer;
+      width:100%;
+      box-shadow: 0 10px 25px rgba(255,59,122,.35);
+      transition: transform .12s ease;
+    }
+    .btn:active{transform: scale(.98);}
+    .secret{
+      display:none;
+      margin-top:14px;
+      background: rgba(255,255,255,.9);
+      border-radius: 16px;
+      padding: 14px;
+      border: 1px dashed rgba(255,59,122,.55);
+    }
+    .music{
+      margin-top:12px;
+      font-size:.9rem;
+      opacity:.85;
+      display:none;
+    }
+    .music small{display:block; opacity:.85; margin-top:6px}
+    .hearts span{
+      position:absolute;
+      font-size:18px;
+      animation: floatUp linear infinite;
+      opacity:.85;
+      left: var(--x);
+      bottom: -40px;
+      filter: drop-shadow(0 6px 10px rgba(0,0,0,.12));
+    }
+    @keyframes floatUp{
+      from { transform: translateY(0) scale(.9) rotate(0deg); opacity:0; }
+      10% { opacity:.9; }
+      to   { transform: translateY(-110vh) scale(1.2) rotate(25deg); opacity:0; }
+    }
+    .footer{opacity:.75;font-size:.85rem;margin-top:12px}
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div style="font-size:34px">💌</div>
+    <h1>Para <span id="nome">Meu amor</span></h1>
+    <p id="linha1">Eu fiz isso rapidinho só pra te lembrar de uma coisa:</p>
+    <p><strong id="linha2">você é meu lugar favorito.</strong></p>
+
+    <button class="btn" id="btn">Clica aqui 👇</button>
+
+    <!-- Música (arquivo local) -->
+    <div class="music" id="musicBox">
+      🎶 Tocando nossa música…
+      <small>(Se não tocar, tenta aumentar o volume ou apertar play ali embaixo.)</small>
+      <audio id="audio" controls preload="auto">
+        <source src="Baco Exu do Blues - Te Amo Disgraça (Faixa 09) - BACO EXU DO BLUES (youtube).mp3" type="audio/mpeg">
+        Seu navegador não suporta áudio.
+      </audio>
+    </div>
+
+    <div class="secret" id="secret">
+      <p style="margin:0 0 8px"><strong>Mensagem secreta:</strong></p>
+      <p style="margin:0" id="msg">
+        Obrigado por existir. Eu te amo mais do que consigo explicar. 💖
+      </p>
+      <p class="footer" id="assinatura">— com carinho, (seu nome)</p>
+    </div>
+  </div>
+
+  <div class="hearts" id="hearts"></div>
+
+  <script>
+    // PERSONALIZE AQUI:
+    const NOME = "Maria Eduarda";               // <- nome dela
+    const SUA_ASSINATURA = "Fernanda";    // <- seu nome
+    const MENSAGEM = "PAmor, só passei aqui pra te lembrar do quanto tu é especial pra mim. Mesmo com a distância, tu consegue deixar meu coração quentinho de um jeito que ninguém mais consegue. Eu amo teu jeito, teu carinho e até as tuas manias… tudo em ti me faz sorrir. Tô morrendo de saudade de te abraçar e te encher de beijo, mas enquanto isso não acontece, fica sabendo que tu mora aqui, bem no meu coração."
+
+    document.getElementById("nome").textContent = NOME;
+    document.getElementById("assinatura").textContent = "— com carinho, " + SUA_ASSINATURA;
+    document.getElementById("msg").textContent = MENSAGEM;
+
+    const secret = document.getElementById("secret");
+    const musicBox = document.getElementById("musicBox");
+    const audio = document.getElementById("audio");
+
+    document.getElementById("btn").addEventListener("click", async () => {
+      secret.style.display = "block";
+      musicBox.style.display = "block";
+      spawnHearts(26);
+
+      // tenta tocar (funciona bem porque foi iniciado por clique)
+      try { await audio.play(); } catch (e) { /* se falhar, ela dá play manual */ }
+    });
+
+    function spawnHearts(n){
+      const wrap = document.getElementById("hearts");
+      for(let i=0;i<n;i++){
+        const s = document.createElement("span");
+        s.textContent = ["💖","💗","💓","💘","❤️"][Math.floor(Math.random()*5)];
+        s.style.setProperty("--x", Math.floor(Math.random()*100) + "vw");
+        const dur = (4 + Math.random()*4).toFixed(2);
+        s.style.animationDuration = dur + "s";
+        s.style.animationDelay = (Math.random()*0.8).toFixed(2) + "s";
+        wrap.appendChild(s);
+        setTimeout(()=>s.remove(), (dur*1000)+1500);
+      }
+    }
+
+    setInterval(()=>spawnHearts(3), 1200);
+  </script>
+</body>
+</html>
